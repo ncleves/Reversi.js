@@ -22,11 +22,9 @@ function setup (){
     //bottom side of board
     rect(0, height-30, width, 30);
 
-
 }
 
 function draw (){
-
 
 
 }
