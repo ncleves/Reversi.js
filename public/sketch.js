@@ -29,9 +29,22 @@ function setup (){
 function draw (){
     var width = 500;
     var height = 550;
-    var spacing = 30;
+    var spacingX = 50;
+    var spacingY = 50;
     var x = 0;
     var y = 0;
+
+    while(spacingX <= width-50){
+        stroke(0);
+        line(spacingX, 75, spacingX, height-75);
+        spacingX = spacingX + 50;
+    }
+
+    while(spacingY <= height-75){
+        stroke(0);
+        line(50, spacingY+25, width-50, spacingY+25);
+        spacingY = spacingY + 50;
+    }
 
     // while (x < width-spacing){
     //     stroke(0);
