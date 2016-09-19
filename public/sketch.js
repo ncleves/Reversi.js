@@ -2,6 +2,7 @@
  * Created by Nix on 8/18/2016.
  */
 
+var board = new board;
 
 function setup (){
     var width = 500;
@@ -31,8 +32,6 @@ function draw (){
     var height = 550;
     var spacingX = 50;
     var spacingY = 50;
-    var x = 0;
-    var y = 0;
 
     while(spacingX <= width-50){
         stroke(0);
@@ -46,24 +45,8 @@ function draw (){
         spacingY = spacingY + 50;
     }
 
-    // while (x < width-spacing){
-    //     stroke(0);
-    //     line(x, spacing, x, height-spacing);
-    //     x = x + spacing;
-    // }
-    //
-    // while (y < height-spacing){
-    //     stroke(0);
-    //     line(spacing, y, width-spacing, y);
-    //     y = y + spacing;
-    // }
+}
 
-    // for(var x = 30; x <= width-30; x += 30){
-    //     for(var y = 30; x <= height-30; y += 30){
-    //         stroke(0);
-    //         line(x, y, width-x, height-y);
-    //     }
-    // }
-
-
+function mousePressed () {
+    board.returnCoor(mouseX, mouseY)
 }
