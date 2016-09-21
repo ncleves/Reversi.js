@@ -8,6 +8,7 @@ var ROWS = 8;
 var X = 50;
 var Y = 50;
 
+var gameBoard = Board.createBoardArray();
 
 function setup (){
     var width = 500;
@@ -63,6 +64,8 @@ function draw (){
 
 function mousePressed (){
     console.log('coor: ' + Board.returnCoor(mouseX, mouseY) + ' mouseX: ' + mouseX + ' mouseY: ' + mouseY);
+    //console.log(gameBoard);
     //return false;
 }
+
 
