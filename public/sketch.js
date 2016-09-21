@@ -3,8 +3,6 @@
  */
 
 // board setup
-// var board = new board;
-
 var COLS = 8;
 var ROWS = 8;
 var X = 50;
@@ -33,17 +31,17 @@ function setup (){
     rect(0, height-50, width, 50);
 
     //create board numbers (top)
-    for(var i = 0; i < ROWS; i++){
+    for(var col = 0; col < COLS; col++){
         fill(0);
         textSize(18);
-        text(""+(i+1), 50*i+70, 40);
+        text(""+(col+1), 50*col+70, 40);
     }
 
     //create board numbers (left side)
-    for(var j = 0; j < COLS; j++){
+    for(var row = 0; row < ROWS; row++){
         fill(0);
         textSize(18);
-        text(""+(j+1), 35, 50*j+80);
+        text(""+(row+1), 35, 50*row+80);
     }
 
 
@@ -51,10 +49,10 @@ function setup (){
 
 function draw (){
     //draw the board (sides are 50px each, 8 rows + 8 cols)
-    for(var i = 1; i <= ROWS; i++){
-        for(var j = 1; j <= COLS; j++){
-            X = i * 50;
-            Y = j * 50;
+    for(var row = 1; row <= ROWS; row++){
+        for(var col = 1; col <= COLS; col++){
+            X = row * 50;
+            Y = col * 50;
             stroke(0);
             noFill();
             rect(X, Y, 50, 50);
@@ -64,17 +62,7 @@ function draw (){
 }
 
 function mousePressed (){
-    console.log('coor: ' + returnCoordinates(mouseX, mouseY) + ' mouseX: ' + mouseX + ' mouseY: ' + mouseY);
+    console.log('coor: ' + Board.returnCoor(mouseX, mouseY) + ' mouseX: ' + mouseX + ' mouseY: ' + mouseY);
     //return false;
 }
 
-function returnCoordinates(coorX, coorY){
-    for(var i = 1; i <= ROWS; i++){
-        for(var j = 1; j <= COLS; j++){
-            if((coorX >= 50*i && coorX <= 50*i+50) && (coorY >= 50*j && coorY <= 50*j+50)){
-                return [i, j];
-            }
-        }
-
-    }
-}
