@@ -8,7 +8,8 @@ var ROWS = 8;
 var X = 50;
 var Y = 50;
 
-var gameBoard = Board.createBoardArray();
+var board = new Board;
+var sketchBoard = Board.board;
 
 function setup (){
     var width = 500;
@@ -44,8 +45,6 @@ function setup (){
         textSize(18);
         text(""+(row+1), 35, 50*row+80);
     }
-
-
 }
 
 function draw (){
@@ -63,9 +62,10 @@ function draw (){
 }
 
 function mousePressed (){
-    console.log('coor: ' + Board.returnCoor(mouseX, mouseY) + ' mouseX: ' + mouseX + ' mouseY: ' + mouseY);
-    //console.log(gameBoard);
+    console.log('coor: ' + board.returnClickCoor(mouseX, mouseY) + ' mouseX: ' + mouseX + ' mouseY: ' + mouseY);
+    console.log(sketchBoard);
     //return false;
 }
+
 
 
