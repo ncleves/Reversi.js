@@ -3,17 +3,22 @@
  */
 
 // board setup
-var COLS = 8;
-var ROWS = 8;
+const COLS = 8;
+const ROWS = 8;
 var X = 50;
 var Y = 50;
-
-var board = new Board;
-var sketchBoard = Board.board;
+var position;
+var gameBoard;
+var piece;
 
 function setup (){
     var width = 500;
     var height = 500;
+
+    gameBoard = new Board;
+    console.log(gameBoard.boardArray);
+    position = new Position(mouseX, mouseY);
+    piece = new Piece;
 
     createCanvas(width, height);
     background(0, 158, 11);
@@ -49,22 +54,24 @@ function setup (){
 
 function draw (){
     //draw the board (sides are 50px each, 8 rows + 8 cols)
-    for(var row = 1; row <= ROWS; row++){
-        for(var col = 1; col <= COLS; col++){
-            X = row * 50;
-            Y = col * 50;
+    for(var row = 0; row < ROWS; row++){
+        for(var col = 0; col < COLS; col++){
+            X = (row+1) * 50;
+            Y = (col+1) * 50;
             stroke(0);
             noFill();
             rect(X, Y, 50, 50);
-
+            piece.makePiece(row, col, gameBoard.boardArray);
         }
     }
+
+
+
 }
 
 function mousePressed (){
-    console.log('coor: ' + board.returnClickCoor(mouseX, mouseY) + ' mouseX: ' + mouseX + ' mouseY: ' + mouseY);
-    console.log(sketchBoard);
-    //return false;
+    console.log('coor: ' + position.returnClickCoor(mouseX, mouseY) + ' mouseX: ' + mouseX + ' mouseY: ' + mouseY);
+    //console.log(gameBoard.boardArray);
 }
 
 
