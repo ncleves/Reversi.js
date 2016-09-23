@@ -1,5 +1,9 @@
 # Reversi.js
 
+# V0.2? Some circles
+
+![circles](https://raw.githubusercontent.com/ncleves/Reversi.js/master/extras/board_w_pieces.png)
+
 # V0.1 Getting somewhere...
 
 ####The sketch so far...
