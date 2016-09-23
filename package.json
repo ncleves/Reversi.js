@@ -1,6 +1,6 @@
 {
   "name": "reversi.js",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "p5.js and node.js implementation of the board game Reversi",
   "main": "server.js",
   "scripts": {
