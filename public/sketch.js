@@ -16,7 +16,6 @@ function setup (){
     var height = 500;
 
     gameBoard = new Board;
-    console.log(gameBoard.boardArray);
     position = new Position(mouseX, mouseY);
     piece = new Piece;
 
@@ -50,6 +49,11 @@ function setup (){
         textSize(18);
         text(""+(row+1), 35, 50*row+80);
     }
+
+    gameBoard.setBoardCoor(3, 3, 'X');
+    gameBoard.setBoardCoor(4, 3, 'O');
+    gameBoard.setBoardCoor(3, 4, 'O');
+    gameBoard.setBoardCoor(4, 4, 'X');
 }
 
 function draw (){
@@ -61,18 +65,18 @@ function draw (){
             stroke(0);
             noFill();
             rect(X, Y, 50, 50);
-            piece.makePiece(row, col, gameBoard.boardArray);
+            piece.drawPiece(row, col, gameBoard.boardArray);
         }
     }
-
-
-
 }
 
 function mousePressed (){
     console.log('coor: ' + position.returnClickCoor(mouseX, mouseY) + ' mouseX: ' + mouseX + ' mouseY: ' + mouseY);
+    console.log('row: ' + position.returnClickCoor(mouseX, mouseY)[0] + ' col: ' + position.returnClickCoor(mouseX, mouseY)[1]);
     //console.log(gameBoard.boardArray);
 }
 
+function makeMove(row, col){
 
+}
 
