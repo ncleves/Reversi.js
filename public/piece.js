@@ -3,18 +3,31 @@
  */
 
 function Piece(){
-    this.makePiece = function(row, col, boardArray){
+    this.drawPiece = function(row, col, boardArray){
 
         if(boardArray[row][col] == 'X'){
             fill(255);
             noStroke();
-            ellipse( ((col)*50)+75, ((row)*50)+75, 45, 45);
+            ellipse( ((col)*50)+75, ((row)*50)+75, 45, 45 );
         }
 
         if(boardArray[row][col] == 'O'){
             fill(0);
-            ellipse(((col)*50)+75, ((row)*50)+75, 45, 45);
+            ellipse( ((col)*50)+75, ((row)*50)+75, 45, 45 );
+        }
+    };
+    
+    this.setPiece = function(row, col, boardArray, player){
+        if(player == 'X'){
+            boardArray[row][col] = 'X';
         }
 
-    }
+        if(player == 'O'){
+            boardArray[row][col] = 'O';
+        }
+
+    };
+
+    
+
 }
