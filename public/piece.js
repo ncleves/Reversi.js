@@ -17,16 +17,16 @@ function Piece(){
         }
     };
     
-    this.setPiece = function(row, col, boardArray, player){
-        if(player == 'X'){
-            boardArray[row][col] = 'X';
-        }
-
-        if(player == 'O'){
-            boardArray[row][col] = 'O';
-        }
-
-    };
+    // this.setPiece = function(row, col, boardArray, player){
+    //     if(player == 'X'){
+    //         boardArray[row][col] = 'X';
+    //     }
+    //
+    //     if(player == 'O'){
+    //         boardArray[row][col] = 'O';
+    //     }
+    //
+    // };
 
     
 

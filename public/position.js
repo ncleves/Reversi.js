@@ -10,9 +10,9 @@ function Position(row, col){
 
     this.col = col;
     
-    this.returnPosForPiece = function(piece){
-        return new Position(this.row, this.col);
-    };
+    // this.returnPosForPiece = function(piece){
+    //     return new Position(this.row, this.col);
+    // };
     
     this.returnClickCoor = function(coorX, coorY){
         if(coorY < 50 || coorY > 450 || coorX < 50 || coorX > 450){
