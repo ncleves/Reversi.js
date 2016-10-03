@@ -189,6 +189,9 @@ function makeMove(row, col) {
 
 function legalMovesRemain() {
     console.log("checking here");
+
+    //TODO: Identify why bug occurs when checking remaining available moves
+
     var result = false;
     for (var row = 0; row < ROWS && row >= 0; row++) {
         for (var col = 0; col < COLS && col >= 0; col++) {
