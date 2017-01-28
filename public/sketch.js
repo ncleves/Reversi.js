@@ -3,52 +3,24 @@
  */
 
 // board setup
+var socket;
+
 const COLS = 8;
 const ROWS = 8;
 var X = 50;
 var Y = 50;
-var position;
 var gameBoard;
 var piece;
 
-const N = 1;
-const NE = 2;
-const E = 3;
-const SE = 4;
-const S = 5;
-const SW = 6;
-const W = 7;
-const NW = 8;
 
-function moveDir(pos, dir) {
-    var row = pos.row;
-    var col = pos.col;
-    switch (dir) {
-        case N:
-            return new Position(row - 1, col);
-        case NE:
-            return new Position(row - 1, col + 1);
-        case E:
-            return new Position(row, col + 1);
-        case SE:
-            return new Position(row + 1, col + 1);
-        case S:
-            return new Position(row + 1, col);
-        case SW:
-            return new Position(row + 1, col - 1);
-        case W:
-            return new Position(row, col - 1);
-        case NW:
-            return new Position(row - 1, col - 1);
-    }
-}
 
 function setup() {
+    socket = io.connect('http://localhost:3000');
+
     var width = 500;
     var height = 500;
 
     gameBoard = new Board;
-    position = new Position(mouseX, mouseY);
     piece = new Piece;
 
     createCanvas(width, height);
@@ -82,41 +54,24 @@ function setup() {
         text("" + (row + 1), 35, 50 * row + 80);
     }
 
-    // gameBoard.setBoardCoor(3, 3, 'X');
-    // gameBoard.setBoardCoor(4, 3, 'O');
-    // gameBoard.setBoardCoor(3, 4, 'O');
-    // gameBoard.setBoardCoor(4, 4, 'X');
+    gameBoard.setBoardCoor(3, 3, 'X');
+    gameBoard.setBoardCoor(4, 3, 'O');
+    gameBoard.setBoardCoor(3, 4, 'O');
+    gameBoard.setBoardCoor(4, 4, 'X');
 
-    gameBoard.setBoardCoor(1, 0, 'X');
-    gameBoard.setBoardCoor(2, 1, 'O');
-    gameBoard.setBoardCoor(2, 2, 'O');
-    gameBoard.setBoardCoor(1, 2, 'O');
-    gameBoard.setBoardCoor(0, 2, 'X');
-    gameBoard.setBoardCoor(3, 3, 'O');
-    gameBoard.setBoardCoor(4, 4, 'O');
 
 }
 
 function mousePressed() {
-    var row = position.returnClickCoor(mouseX, mouseY)[0];
-    var col = position.returnClickCoor(mouseX, mouseY)[1];
+    var row = returnClickCoor(mouseX, mouseY)[0];
+    var col = returnClickCoor(mouseX, mouseY)[1];
 
     makeMove(row, col);
 
     console.log("checkMove arr: " + checkMove(row, col));
 
-    console.log('row: ' + position.returnClickCoor(mouseX, mouseY)[0] + ' col: ' + position.returnClickCoor(mouseX, mouseY)[1]);
-    //console.log(gameBoard.boardArray);
+    console.log('row: ' + returnClickCoor(mouseX, mouseY)[0] + ' col: ' + returnClickCoor(mouseX, mouseY)[1]);
 
-    var result = '';
-    for (var i = 0; i < 8; i++) {
-        result += (i + 1);
-        for (var j = 0; j < 8; j++) {
-            result += gameBoard.boardArray[i][j];
-        }
-        result += '\n';
-    }
-    console.log(result);
 
     //TODO: Add a drawScore function
     // text("Score for Dark: "+gameBoard.scoreO, 50, 475);
@@ -139,177 +94,20 @@ function draw() {
 
 }
 
-
-function makeMove(row, col) {
-    var currPlayer = gameBoard.player;
-    var positionsToFlip;
-    var numToFlip;
-
-    var legalMove = false;
-    if(checkMove(row, col).length > 0){
-        legalMove = true;
-        positionsToFlip = checkMove(row, col);
-        numToFlip = positionsToFlip.length;
+function returnClickCoor (coorX, coorY){
+    if(coorY < 50 || coorY > 450 || coorX < 50 || coorX > 450){
+        return [null, null];
     }
 
-    if (gameBoard.boardArray[row][col] == '_' && legalMove) {
-        gameBoard.setBoardCoor(row, col, currPlayer);
-
-        // outer array of position arrays
-        for (var i = 0; i < positionsToFlip.length; i++) {
-
-            var flipRow = positionsToFlip[i].row;
-            var flipCol = positionsToFlip[i].col;
-            gameBoard.setBoardCoor(flipRow, flipCol, currPlayer);
-
-            if (currPlayer == 'X') {
-                gameBoard.scoreX = gameBoard.scoreX + numToFlip + 1;
-                gameBoard.scoreO = gameBoard.scoreO - numToFlip;
-            } else {
-                gameBoard.scoreO = gameBoard.scoreO + numToFlip + 1;
-                gameBoard.scoreX = gameBoard.scoreX - pnumToFlip;
+    for(var row = 0; row < ROWS; row++){
+        for(var col = 0; col < COLS; col++){
+            if((coorY >= 50*(row+1) && coorY <= 50*(row+1)+50) && (coorX >= 50*(col+1) && coorX <= 50*(col+1)+50)){
+                return [row, col];
             }
 
         }
 
-        gameBoard.player = opponent();
-
-        if (!legalMovesRemain()) {
-            // no moves found for player opponent
-            gameBoard.player = currPlayer;
-        }
-
-        if (!legalMovesRemain()) {
-            // no moves found for anyone
-            gameBoard.noMovesRemain = true;
-        }
     }
 }
 
 
-function legalMovesRemain() {
-    console.log("checking here");
-
-    //TODO: Identify why bug occurs when checking remaining available moves
-
-    var result = false;
-    for (var row = 0; row < ROWS && row >= 0; row++) {
-        for (var col = 0; col < COLS && col >= 0; col++) {
-            if (checkMove(row, col).length != 0 && gameBoard.boardArray[row][col] == '_') {
-                result = true;
-            }
-        }
-    }
-    return result;
-}
-
-
-function checkMove(row, col) {
-    var flankedPieces = [];
-    var directions = [];
-
-    if (row == 0 && col >= 1 && col <= 6) { // top row (not corners)
-        directions.push(E);
-        directions.push(SE);
-        directions.push(S);
-        directions.push(SW);
-        directions.push(W);
-    } else if (row == 0 && col == 0) { // top left corner
-        directions.push(E);
-        directions.push(SE);
-        directions.push(S);
-    } else if (row == 0 && col == 7) { // top right corner
-        directions.push(S);
-        directions.push(SW);
-        directions.push(W);
-    } else if (col == 0 && row >= 1 && row <= 6) { // left column (not corners)
-        directions.push(N);
-        directions.push(NE);
-        directions.push(E);
-        directions.push(SE);
-        directions.push(S);
-    } else if (row == 7 && col == 0) { // bottom left corner
-        directions.push(N);
-        directions.push(NE);
-        directions.push(E);
-    } else if (row == 7 && col >= 1 && col <= 6) { // bottom row (not corners)
-        directions.push(N);
-        directions.push(NE);
-        directions.push(E);
-        directions.push(W);
-        directions.push(NW);
-    } else if (row == 7 && col == 7) { // bottom right corner
-        directions.push(N);
-        directions.push(W);
-        directions.push(NW);
-    } else if (row == 7 && col >= 1 && col <= 6) { // right column (not corners)
-        directions.push(N);
-        directions.push(S);
-        directions.push(SW);
-        directions.push(W);
-        directions.push(NW);
-    } else {
-        directions.push(N);
-        directions.push(NE);
-        directions.push(E);
-        directions.push(SE);
-        directions.push(S);
-        directions.push(SW);
-        directions.push(W);
-        directions.push(NW);
-    }
-
-    var startPos = new Position(row, col);
-    console.log("start pos:");
-    console.log(startPos);
-
-    for (var currDir = 0; currDir < directions.length; currDir++) {
-
-        var tempPosArr = [];
-        var newPos = moveDir(startPos, directions[currDir]);
-
-        while (gameBoard.boardArray[newPos.row][newPos.col] == opponent() && (newPos.row > 0 || newPos.row <= 7 || newPos.col > 0 || newPos.col <= 7)) {
-
-            tempPosArr.push(newPos);
-            newPos = moveDir(newPos, directions[currDir]);
-
-            if (gameBoard.boardArray[newPos.row][newPos.col] == gameBoard.player) {
-                flankedPieces = flankedPieces.concat(tempPosArr);
-
-            } else if (gameBoard.boardArray[newPos.row][newPos.col] == '_') {
-                break;
-
-            }
-        }
-    }
-    console.log(flankedPieces);
-    return flankedPieces;
-
-}
-
-function opponent() {
-    if (gameBoard.player == 'X') {
-        return 'O';
-    } else {
-        return 'X';
-    }
-}
-
-function gameOver() {
-    var result = false;
-    if (gameBoard.scoreX + gameBoard.scoreO == 64 || gameBoard.scoreX == 0 || gameBoard.scoreO == 0 || gameBoard.noMovesRemain == true) {
-        result = true;
-    }
-
-    return result;
-}
-
-function getWinner() {
-    var result = 'X';
-    if (gameOver() && gameBoard.scoreX > gameBoard.scoreO) {
-        result = 'X';
-    } else if (gameBoard.scoreO > gameBoard.scoreX) {
-        result = 'O';
-    }
-    return result;
-}
