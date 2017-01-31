@@ -54,12 +54,6 @@ function setup() {
         text("" + (row + 1), 35, 50 * row + 80);
     }
 
-    gameBoard.setBoardCoor(3, 3, 'X');
-    gameBoard.setBoardCoor(4, 3, 'O');
-    gameBoard.setBoardCoor(3, 4, 'O');
-    gameBoard.setBoardCoor(4, 4, 'X');
-
-
 }
 
 function mousePressed() {
@@ -79,6 +73,19 @@ function mousePressed() {
 
 }
 
+function drawPiece(row, col, boardArray){
+    if(boardArray[row][col] == 'X'){
+        fill(255);
+        noStroke();
+        ellipse( ((col)*50)+75, ((row)*50)+75, 45, 45 );
+    }
+
+    if(boardArray[row][col] == 'O'){
+        fill(0);
+        ellipse( ((col)*50)+75, ((row)*50)+75, 45, 45 );
+    }
+}
+
 function draw() {
     //draw the board (sides are 50px each, 8 rows + 8 cols)
     for (var row = 0; row < ROWS; row++) {
@@ -88,7 +95,7 @@ function draw() {
             stroke(0);
             noFill();
             rect(X, Y, 50, 50);
-            piece.drawPiece(row, col, gameBoard.boardArray);
+            drawPiece(row, col, gameBoard.boardArray);
         }
     }
 

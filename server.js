@@ -11,6 +11,9 @@ const SW = 6;
 const W = 7;
 const NW = 8;
 
+const ROWS = 8;
+const COLS = 8;
+
 var express = require('express');
 var app = express();
 var server = app.listen(3000);
@@ -21,30 +24,35 @@ var socket = require('socket.io');
 var io = socket(server);
 io.sockets.on('connection', newConnection);
 
-//create the board
-var gameBoard = new Board;
 
 function newConnection(socket) {
     console.log('new connection: ' + socket.id);
+    gameBoard.setBoardCoor(3, 3, 'X');
+    gameBoard.setBoardCoor(4, 3, 'O');
+    gameBoard.setBoardCoor(3, 4, 'O');
+    gameBoard.setBoardCoor(4, 4, 'X');
+    console.log(printBoard());
+}
+
+//create the board
+var gameBoard = new Board;
+
+function printBoard(){
     var result = '';
-    for (var i = 0; i < 8; i++) {
+    for (var i = 0; i < ROWS; i++) {
         result += (i + 1);
-        for (var j = 0; j < 8; j++) {
+        for (var j = 0; j < COLS; j++) {
             result += gameBoard.boardArray[i][j];
         }
         result += '\n';
     }
-    console.log(result);
+    return result;
 }
 
 function Board(){
-    const ROWS = 8;
-    const COLS = 8;
-
     this.player = 'X';
 
     this.scoreX = 2;
-
     this.scoreO = 2;
 
     this.noMovesRemain = false;
@@ -69,8 +77,8 @@ function Board(){
 
     this.boardArray = this.createBoardArray();
 
-    this.setBoardCoor = function(row, col, pieceChar){
-        this.boardArray[row][col] = pieceChar;
+    this.setBoardCoor = function(row, col, piece){
+        this.boardArray[row][col] = piece;
     };
 }
 
@@ -129,7 +137,7 @@ function makeMove(row, col) {
                 gameBoard.scoreO = gameBoard.scoreO - numToFlip;
             } else {
                 gameBoard.scoreO = gameBoard.scoreO + numToFlip + 1;
-                gameBoard.scoreX = gameBoard.scoreX - pnumToFlip;
+                gameBoard.scoreX = gameBoard.scoreX - numToFlip;
             }
 
         }
