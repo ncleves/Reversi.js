@@ -1,6 +1,14 @@
 /**
  * Created by Nix on 8/24/2016.
  */
+var express = require('express');
+var app = express();
+var server = app.listen(3000);
+console.log("server is listening on port 3000...");
+app.use(express.static('public'));
+
+var socket = require('socket.io');
+var io = socket(server);
 
 const N = 1;
 const NE = 2;
@@ -14,25 +22,26 @@ const NW = 8;
 const ROWS = 8;
 const COLS = 8;
 
-var express = require('express');
-var app = express();
-var server = app.listen(3000);
-console.log("server is listening on port 3000");
-app.use(express.static('public'));
+connections = [];
 
-var socket = require('socket.io');
-var io = socket(server);
-io.sockets.on('connection', newConnection);
+io.sockets.on('connection', function(socket) {
+    connections.push(socket);
+    console.log('Connected: %s sockets connected', connections.length);
 
+    socket.on('disconnect', function(data){
+        connections.splice(connections.indexOf(socket), 1);
+        console.log('Disconnected: %s sockets connected', connections.length);
+    });
 
-function newConnection(socket) {
-    console.log('new connection: ' + socket.id);
-    gameBoard.setBoardCoor(3, 3, 'X');
-    gameBoard.setBoardCoor(4, 3, 'O');
-    gameBoard.setBoardCoor(3, 4, 'O');
-    gameBoard.setBoardCoor(4, 4, 'X');
-    console.log(printBoard());
-}
+    socket.emit('init', {board: gameBoard});
+
+    socket.on('ClickCoor', clickResponse);
+
+    function clickResponse(data){
+        console.log(data);
+    }
+
+});
 
 //create the board
 var gameBoard = new Board;
@@ -47,6 +56,10 @@ function printBoard(){
         result += '\n';
     }
     return result;
+}
+
+function initBoard(){
+
 }
 
 function Board(){
@@ -71,6 +84,11 @@ function Board(){
                 boardArr[row][col] = "_";
             }
         }
+
+        boardArr[3][3] = 'X';
+        boardArr[4][3] = 'O';
+        boardArr[3][4] = 'O';
+        boardArr[4][4] = 'X';
 
         return boardArr;
     };

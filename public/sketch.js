@@ -3,7 +3,7 @@
  */
 
 // board setup
-var socket;
+var socket = io.connect('http://localhost:3000');
 
 const COLS = 8;
 const ROWS = 8;
@@ -12,16 +12,13 @@ var Y = 50;
 var gameBoard;
 var piece;
 
-
-
 function setup() {
-    socket = io.connect('http://localhost:3000');
-
     var width = 500;
     var height = 500;
 
-    gameBoard = new Board;
-    piece = new Piece;
+    socket.on('init', function (data) {
+        gameBoard = data.board;
+    });
 
     createCanvas(width, height);
     background(0, 158, 11);
@@ -57,15 +54,17 @@ function setup() {
 }
 
 function mousePressed() {
-    var row = returnClickCoor(mouseX, mouseY)[0];
-    var col = returnClickCoor(mouseX, mouseY)[1];
+    var r = returnClickCoor(mouseX, mouseY)[0];
+    var c = returnClickCoor(mouseX, mouseY)[1];
 
-    makeMove(row, col);
-
-    console.log("checkMove arr: " + checkMove(row, col));
-
-    console.log('row: ' + returnClickCoor(mouseX, mouseY)[0] + ' col: ' + returnClickCoor(mouseX, mouseY)[1]);
-
+    if(r != null && c != null){
+        var data = {
+            row: r,
+            col: c
+        };
+        console.log("sending: " + data.row + "," + data.col);
+        socket.emit('ClickCoor', data);
+    }
 
     //TODO: Add a drawScore function
     // text("Score for Dark: "+gameBoard.scoreO, 50, 475);
