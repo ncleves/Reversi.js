@@ -12,13 +12,16 @@ var Y = 50;
 var gameBoard;
 var piece;
 
+// socket.on('init', function (data) {
+//     gameBoard = JSON.parse(data);
+//     console.log(gameBoard);
+// });
+
 function setup() {
     var width = 500;
     var height = 500;
 
-    socket.on('init', function (data) {
-        gameBoard = data.board;
-    });
+    gameBoard = new Board();
 
     createCanvas(width, height);
     background(0, 158, 11);

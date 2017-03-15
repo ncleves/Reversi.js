@@ -33,8 +33,6 @@ io.sockets.on('connection', function(socket) {
         console.log('Disconnected: %s sockets connected', connections.length);
     });
 
-    socket.emit('init', {board: gameBoard});
-
     socket.on('ClickCoor', clickResponse);
 
     function clickResponse(data){
@@ -45,6 +43,7 @@ io.sockets.on('connection', function(socket) {
 
 //create the board
 var gameBoard = new Board;
+// testBoard = JSON.stringify(gameBoard);
 
 function printBoard(){
     var result = '';
@@ -56,10 +55,6 @@ function printBoard(){
         result += '\n';
     }
     return result;
-}
-
-function initBoard(){
-
 }
 
 function Board(){
@@ -84,11 +79,6 @@ function Board(){
                 boardArr[row][col] = "_";
             }
         }
-
-        boardArr[3][3] = 'X';
-        boardArr[4][3] = 'O';
-        boardArr[3][4] = 'O';
-        boardArr[4][4] = 'X';
 
         return boardArr;
     };
