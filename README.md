@@ -2,15 +2,15 @@
 
 # V0.2? Some circles
 
-#####I don't think this constitutes a minor version change, but hey, it's progress
+##### I don't think this constitutes a minor version change, but hey, it's progress
 ![circles](https://raw.githubusercontent.com/ncleves/Reversi.js/master/extras/board_w_pieces.png)
 
 # V0.1 Getting somewhere...
 
-####The sketch so far...
+#### The sketch so far...
 ![blank_board](https://raw.githubusercontent.com/ncleves/Reversi.js/master/Extras/blank_board.PNG)
 
-####Returning coordinates of the board where mouse is clicked:
+#### Returning coordinates of the board where mouse is clicked:
 ![board_coor](https://raw.githubusercontent.com/ncleves/Reversi.js/master/Extras/board_coor.PNG)
 
 # V0.0
