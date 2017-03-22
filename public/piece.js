@@ -16,18 +16,8 @@ function Piece(){
             ellipse( ((col)*50)+75, ((row)*50)+75, 45, 45 );
         }
     };
-    
-    // this.setPiece = function(row, col, boardArray, player){
-    //     if(player == 'X'){
-    //         boardArray[row][col] = 'X';
-    //     }
-    //
-    //     if(player == 'O'){
-    //         boardArray[row][col] = 'O';
-    //     }
-    //
-    // };
 
-    
+    this.drawLegalMoves = function(){
 
+    }
 }

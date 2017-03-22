@@ -82,18 +82,24 @@ function setup() {
         text("" + (row + 1), 35, 50 * row + 80);
     }
 
-    // gameBoard.setBoardCoor(3, 3, 'X');
-    // gameBoard.setBoardCoor(4, 3, 'O');
-    // gameBoard.setBoardCoor(3, 4, 'O');
-    // gameBoard.setBoardCoor(4, 4, 'X');
-
-    gameBoard.setBoardCoor(1, 0, 'X');
-    gameBoard.setBoardCoor(2, 1, 'O');
-    gameBoard.setBoardCoor(2, 2, 'O');
-    gameBoard.setBoardCoor(1, 2, 'O');
+    gameBoard.setBoardCoor(0, 1, 'O');
     gameBoard.setBoardCoor(0, 2, 'X');
-    gameBoard.setBoardCoor(3, 3, 'O');
-    gameBoard.setBoardCoor(4, 4, 'O');
+    gameBoard.setBoardCoor(1, 1, 'O');
+
+    gameBoard.setBoardCoor(3, 3, 'X');
+    gameBoard.setBoardCoor(4, 3, 'O');
+    gameBoard.setBoardCoor(3, 4, 'O');
+    gameBoard.setBoardCoor(4, 4, 'X');
+
+
+    //TESTING COORDINATES
+    // gameBoard.setBoardCoor(1, 0, 'X');
+    // gameBoard.setBoardCoor(2, 1, 'O');
+    // gameBoard.setBoardCoor(2, 2, 'O');
+    // gameBoard.setBoardCoor(1, 2, 'O');
+    // gameBoard.setBoardCoor(0, 2, 'X');
+    // gameBoard.setBoardCoor(3, 3, 'O');
+    // gameBoard.setBoardCoor(4, 4, 'O');
 
 }
 
@@ -167,7 +173,7 @@ function makeMove(row, col) {
                 gameBoard.scoreO = gameBoard.scoreO - numToFlip;
             } else {
                 gameBoard.scoreO = gameBoard.scoreO + numToFlip + 1;
-                gameBoard.scoreX = gameBoard.scoreX - pnumToFlip;
+                gameBoard.scoreX = gameBoard.scoreX - numToFlip;
             }
 
         }
@@ -187,16 +193,19 @@ function makeMove(row, col) {
 }
 
 
-function legalMovesRemain() {
+function remainingMoves() {
     console.log("checking here");
 
     //TODO: Identify why bug occurs when checking remaining available moves
+
+    var remainingMoves = [];
 
     var result = false;
     for (var row = 0; row < ROWS && row >= 0; row++) {
         for (var col = 0; col < COLS && col >= 0; col++) {
             if (checkMove(row, col).length != 0 && gameBoard.boardArray[row][col] == '_') {
-                result = true;
+                var move = new Position(row, col);
+                remainingMoves.concat(move);
             }
         }
     }
@@ -266,17 +275,21 @@ function checkMove(row, col) {
     for (var currDir = 0; currDir < directions.length; currDir++) {
 
         var tempPosArr = [];
-        var newPos = moveDir(startPos, directions[currDir]);
+        var radialPos = moveDir(startPos, directions[currDir]);
+        var linearPos = radialPos;
+        console.log("row: " + radialPos.row + " col: " + radialPos.col);
 
-        while (gameBoard.boardArray[newPos.row][newPos.col] == opponent() && (newPos.row > 0 || newPos.row <= 7 || newPos.col > 0 || newPos.col <= 7)) {
+        while (gameBoard.boardArray[linearPos.row][linearPos.col] == opponent()
+                && (linearPos.row >= 0 || linearPos.row <= 7 || linearPos.col >= 0 || linearPos.col <= 7)) {
 
-            tempPosArr.push(newPos);
-            newPos = moveDir(newPos, directions[currDir]);
+            tempPosArr.push(linearPos);
+            linearPos = moveDir(radialPos, directions[currDir]);
+            console.log("WHILE row: " + linearPos.row + " col: " + linearPos.col);
 
-            if (gameBoard.boardArray[newPos.row][newPos.col] == gameBoard.player) {
+            if (gameBoard.boardArray[linearPos.row][linearPos.col] == gameBoard.player) {
                 flankedPieces = flankedPieces.concat(tempPosArr);
 
-            } else if (gameBoard.boardArray[newPos.row][newPos.col] == '_') {
+            } else if (gameBoard.boardArray[linearPos.row][linearPos.col] == '_') {
                 break;
 
             }
