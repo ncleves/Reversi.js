@@ -72,14 +72,14 @@ function setup() {
     for (var col = 0; col < COLS; col++) {
         fill(0);
         textSize(18);
-        text("" + (col + 1), 50 * col + 70, 40);
+        text("" + (col), 50 * col + 70, 40);
     }
 
     //create board numbers (left side)
     for (var row = 0; row < ROWS; row++) {
         fill(0);
         textSize(18);
-        text("" + (row + 1), 35, 50 * row + 80);
+        text("" + (row), 35, 50 * row + 80);
     }
 
     gameBoard.setBoardCoor(0, 1, 'O');
@@ -277,21 +277,20 @@ function checkMove(row, col) {
         var tempPosArr = [];
         var radialPos = moveDir(startPos, directions[currDir]);
         var linearPos = radialPos;
-        console.log("row: " + radialPos.row + " col: " + radialPos.col);
+        console.log("radial row: " + radialPos.row + " col: " + radialPos.col);
 
         while (gameBoard.boardArray[linearPos.row][linearPos.col] == opponent()
-                && (linearPos.row >= 0 || linearPos.row <= 7 || linearPos.col >= 0 || linearPos.col <= 7)) {
+        && (linearPos.row >= 0 || linearPos.row <= 7 || linearPos.col >= 0 || linearPos.col <= 7)){
 
             tempPosArr.push(linearPos);
             linearPos = moveDir(radialPos, directions[currDir]);
-            console.log("WHILE row: " + linearPos.row + " col: " + linearPos.col);
+            console.log("linear row: " + linearPos.row + " col: " + linearPos.col);
 
             if (gameBoard.boardArray[linearPos.row][linearPos.col] == gameBoard.player) {
                 flankedPieces = flankedPieces.concat(tempPosArr);
 
             } else if (gameBoard.boardArray[linearPos.row][linearPos.col] == '_') {
                 break;
-
             }
         }
     }
