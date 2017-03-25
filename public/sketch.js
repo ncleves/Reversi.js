@@ -82,15 +82,17 @@ function setup() {
         text("" + (row), 35, 50 * row + 80);
     }
 
-    gameBoard.setBoardCoor(0, 1, 'O');
-    gameBoard.setBoardCoor(0, 2, 'X');
-    gameBoard.setBoardCoor(1, 1, 'O');
+    //TESTING COORDINATES
+    // gameBoard.setBoardCoor(0, 1, 'O');
+    // gameBoard.setBoardCoor(0, 2, 'X');
+    // gameBoard.setBoardCoor(1, 1, 'O');
 
     gameBoard.setBoardCoor(3, 3, 'X');
     gameBoard.setBoardCoor(4, 3, 'O');
     gameBoard.setBoardCoor(3, 4, 'O');
     gameBoard.setBoardCoor(4, 4, 'X');
 
+    remainingMoves();
 
     //TESTING COORDINATES
     // gameBoard.setBoardCoor(1, 0, 'X');
@@ -107,7 +109,9 @@ function mousePressed() {
     var row = position.returnClickCoor(mouseX, mouseY)[0];
     var col = position.returnClickCoor(mouseX, mouseY)[1];
 
-    makeMove(row, col);
+    if(row != null && col != null) {
+        makeMove(row, col);
+    }
 
     console.log("checkMove arr: " + checkMove(row, col));
 
@@ -142,6 +146,16 @@ function draw() {
             piece.drawPiece(row, col, gameBoard.boardArray);
         }
     }
+
+    if(gameBoard.player == 'X'){
+        fill(255);
+        noStroke();
+        ellipse( 25, 25, 45, 45 );
+    }else{
+        fill(0);
+        ellipse( 25, 25, 45, 45 );
+    }
+
 
 }
 
@@ -194,109 +208,124 @@ function makeMove(row, col) {
 
 
 function remainingMoves() {
-    console.log("checking here");
+    //console.log("checking here");
 
     //TODO: Identify why bug occurs when checking remaining available moves
 
-    var remainingMoves = [];
+    var remainingMoves = {};
 
-    var result = false;
-    for (var row = 0; row < ROWS && row >= 0; row++) {
-        for (var col = 0; col < COLS && col >= 0; col++) {
-            if (checkMove(row, col).length != 0 && gameBoard.boardArray[row][col] == '_') {
+    for (var row = 0; row < ROWS; row++) {
+        for (var col = 0; col < COLS; col++) {
+            if (checkMove(row, col).length > 0) {
                 var move = new Position(row, col);
-                remainingMoves.concat(move);
+                remainingMoves[move] = { toFlip: checkMove(row, col) };
             }
         }
     }
-    return result;
+    console.log(remainingMoves);
+    return remainingMoves;
 }
 
 
 function checkMove(row, col) {
-    var flankedPieces = [];
+    var allFlankedPositions = [];
     var directions = [];
 
-    if (row == 0 && col >= 1 && col <= 6) { // top row (not corners)
-        directions.push(E);
-        directions.push(SE);
-        directions.push(S);
-        directions.push(SW);
-        directions.push(W);
-    } else if (row == 0 && col == 0) { // top left corner
-        directions.push(E);
-        directions.push(SE);
-        directions.push(S);
-    } else if (row == 0 && col == 7) { // top right corner
-        directions.push(S);
-        directions.push(SW);
-        directions.push(W);
-    } else if (col == 0 && row >= 1 && row <= 6) { // left column (not corners)
-        directions.push(N);
-        directions.push(NE);
-        directions.push(E);
-        directions.push(SE);
-        directions.push(S);
-    } else if (row == 7 && col == 0) { // bottom left corner
-        directions.push(N);
-        directions.push(NE);
-        directions.push(E);
-    } else if (row == 7 && col >= 1 && col <= 6) { // bottom row (not corners)
-        directions.push(N);
-        directions.push(NE);
-        directions.push(E);
-        directions.push(W);
-        directions.push(NW);
-    } else if (row == 7 && col == 7) { // bottom right corner
-        directions.push(N);
-        directions.push(W);
-        directions.push(NW);
-    } else if (row == 7 && col >= 1 && col <= 6) { // right column (not corners)
-        directions.push(N);
-        directions.push(S);
-        directions.push(SW);
-        directions.push(W);
-        directions.push(NW);
-    } else {
-        directions.push(N);
-        directions.push(NE);
-        directions.push(E);
-        directions.push(SE);
-        directions.push(S);
-        directions.push(SW);
-        directions.push(W);
-        directions.push(NW);
-    }
+    if(gameBoard.boardArray[row][col] == '_'){
 
-    var startPos = new Position(row, col);
-    console.log("start pos:");
-    console.log(startPos);
+        if (row == 0 && col >= 1 && col <= 6) { // top row (not corners)
+            directions.push(E);
+            directions.push(SE);
+            directions.push(S);
+            directions.push(SW);
+            directions.push(W);
+        } else if (row == 0 && col == 0) { // top left corner
+            directions.push(E);
+            directions.push(SE);
+            directions.push(S);
+        } else if (row == 0 && col == 7) { // top right corner
+            directions.push(S);
+            directions.push(SW);
+            directions.push(W);
+        } else if (col == 0 && row >= 1 && row <= 6) { // left column (not corners)
+            directions.push(N);
+            directions.push(NE);
+            directions.push(E);
+            directions.push(SE);
+            directions.push(S);
+        } else if (row == 7 && col == 0) { // bottom left corner
+            directions.push(N);
+            directions.push(NE);
+            directions.push(E);
+        } else if (row == 7 && col >= 1 && col <= 6) { // bottom row (not corners)
+            directions.push(N);
+            directions.push(NE);
+            directions.push(E);
+            directions.push(W);
+            directions.push(NW);
+        } else if (row == 7 && col == 7) { // bottom right corner
+            directions.push(N);
+            directions.push(W);
+            directions.push(NW);
+        } else if (row == 7 && col >= 1 && col <= 6) { // right column (not corners)
+            directions.push(N);
+            directions.push(S);
+            directions.push(SW);
+            directions.push(W);
+            directions.push(NW);
+        } else {
+            directions.push(N);
+            directions.push(NE);
+            directions.push(E);
+            directions.push(SE);
+            directions.push(S);
+            directions.push(SW);
+            directions.push(W);
+            directions.push(NW);
+        }
 
-    for (var currDir = 0; currDir < directions.length; currDir++) {
+        var startPos = new Position(row, col);
+        console.log("startPos: " + startPos.row + " " + startPos.col);
+        console.log("directions: " + directions);
+        console.log("current player: " + gameBoard.player);
 
-        var tempPosArr = [];
-        var radialPos = moveDir(startPos, directions[currDir]);
-        var linearPos = radialPos;
-        console.log("radial row: " + radialPos.row + " col: " + radialPos.col);
+        for (var currDir = 0; currDir < directions.length; currDir++) {
 
-        while (gameBoard.boardArray[linearPos.row][linearPos.col] == opponent()
-        && (linearPos.row >= 0 || linearPos.row <= 7 || linearPos.col >= 0 || linearPos.col <= 7)){
+            var searchPos = moveDir(startPos, directions[currDir]);
+            var tempPositions = [];
 
-            tempPosArr.push(linearPos);
-            linearPos = moveDir(radialPos, directions[currDir]);
-            console.log("linear row: " + linearPos.row + " col: " + linearPos.col);
+            console.log("currdir: " + directions[currDir] + " searchPos: " + searchPos.row + " " + searchPos.col);
 
-            if (gameBoard.boardArray[linearPos.row][linearPos.col] == gameBoard.player) {
-                flankedPieces = flankedPieces.concat(tempPosArr);
+            while (searchPos.row >= 0 || searchPos.row <= 7 || searchPos.col >= 0 || searchPos.col <= 7) { // check within confines of the board
 
-            } else if (gameBoard.boardArray[linearPos.row][linearPos.col] == '_') {
-                break;
+                var searchPiece = gameBoard.boardArray[searchPos.row][searchPos.col];
+                console.log("searchPiece: " + searchPiece);
+
+                if (searchPiece == opponent()) {
+
+                    tempPositions.push(searchPos);
+                    console.log("temp:");
+                    console.log(tempPositions);
+                    searchPos = moveDir(searchPos, directions[currDir]); // continue checking in this direction (NO BREAK HERE)
+                    console.log("IN currdir: " + directions[currDir] + " searchPos: " + searchPos.row + " " + searchPos.col);
+
+                } else if (searchPiece != gameBoard.player) {
+
+                    break; // check next cardinal direction
+
+                } else if (searchPiece == gameBoard.player) {
+
+                    allFlankedPositions = allFlankedPositions.concat(tempPositions); // we have found one of our own pieces, tempPositions is valid
+                    break; //continue checking cardinal directions
+
+                }
             }
         }
+        console.log(allFlankedPositions);
+        return allFlankedPositions;
+    }else{
+        return allFlankedPositions;
     }
-    console.log(flankedPieces);
-    return flankedPieces;
-
 }
 
 function opponent() {
