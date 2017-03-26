@@ -87,12 +87,31 @@ function setup() {
     // gameBoard.setBoardCoor(0, 2, 'X');
     // gameBoard.setBoardCoor(1, 1, 'O');
 
+    //regular start
     gameBoard.setBoardCoor(3, 3, 'X');
     gameBoard.setBoardCoor(4, 3, 'O');
     gameBoard.setBoardCoor(3, 4, 'O');
     gameBoard.setBoardCoor(4, 4, 'X');
 
-    remainingMoves();
+    // remainingMoves();
+
+
+    //UNCOMMENT FOR AN 'X'
+    // gameBoard.setBoardCoor(1, 1, 'O');
+    // gameBoard.setBoardCoor(2, 2, 'O');
+    // gameBoard.setBoardCoor(4, 4, 'O');
+    // gameBoard.setBoardCoor(5, 5, 'O');
+    // gameBoard.setBoardCoor(6, 6, 'O');
+    // gameBoard.setBoardCoor(1, 5, 'O');
+    // gameBoard.setBoardCoor(2, 4, 'O');
+    // gameBoard.setBoardCoor(4, 2, 'O');
+    // gameBoard.setBoardCoor(5, 1, 'O');
+    //
+    // gameBoard.setBoardCoor(0, 0, 'X');
+    // gameBoard.setBoardCoor(0, 6, 'X');
+    // gameBoard.setBoardCoor(7, 7, 'X');
+    // gameBoard.setBoardCoor(6, 0, 'X');
+
 
     //TESTING COORDINATES
     // gameBoard.setBoardCoor(1, 0, 'X');
@@ -296,7 +315,9 @@ function checkMove(row, col) {
 
             console.log("currdir: " + directions[currDir] + " searchPos: " + searchPos.row + " " + searchPos.col);
 
-            while (searchPos.row >= 0 || searchPos.row <= 7 || searchPos.col >= 0 || searchPos.col <= 7) { // check within confines of the board
+            while (true) { // check within confines of the board
+
+                // searchPos.row >= 0 || searchPos.row <= 7 || searchPos.col >= 0 || searchPos.col <= 7
 
                 var searchPiece = gameBoard.boardArray[searchPos.row][searchPos.col];
                 console.log("searchPiece: " + searchPiece);
@@ -306,8 +327,13 @@ function checkMove(row, col) {
                     tempPositions.push(searchPos);
                     console.log("temp:");
                     console.log(tempPositions);
-                    searchPos = moveDir(searchPos, directions[currDir]); // continue checking in this direction (NO BREAK HERE)
+                    searchPos = moveDir(searchPos, directions[currDir]);
+                    // continue checking in this direction
                     console.log("IN currdir: " + directions[currDir] + " searchPos: " + searchPos.row + " " + searchPos.col);
+                    if(searchPos.row > 7 || searchPos.col > 7 || searchPos.row < 0 || searchPos.col < 0){
+                        break; // if we reach the edge of the board, check next cardinal direction
+                    }
+
 
                 } else if (searchPiece != gameBoard.player) {
 
