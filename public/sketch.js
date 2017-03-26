@@ -93,7 +93,8 @@ function setup() {
     gameBoard.setBoardCoor(3, 4, 'O');
     gameBoard.setBoardCoor(4, 4, 'X');
 
-    // remainingMoves();
+    console.log('remaining moves: ');
+    remainingMoves();
 
 
     //UNCOMMENT FOR AN 'X'
@@ -166,6 +167,7 @@ function draw() {
         }
     }
 
+    // show current player in top left corner
     if(gameBoard.player == 'X'){
         fill(255);
         noStroke();
@@ -231,17 +233,25 @@ function remainingMoves() {
 
     //TODO: Identify why bug occurs when checking remaining available moves
 
-    var remainingMoves = {};
+    var remainingMoves = [];
+    var remainingPositions = [];
 
     for (var row = 0; row < ROWS; row++) {
         for (var col = 0; col < COLS; col++) {
             if (checkMove(row, col).length > 0) {
                 var move = new Position(row, col);
-                remainingMoves[move] = { toFlip: checkMove(row, col) };
+                // remainingMoves = remainingMoves.concat(move);
+                // remainingPositions = remainingPositions.concat(checkMove(row, col));
+
+                remainingMoves.push(move);
+                remainingPositions.push(checkMove(row,col));
+
             }
         }
     }
+
     console.log(remainingMoves);
+    console.log(remainingPositions);
     return remainingMoves;
 }
 
