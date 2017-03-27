@@ -1,5 +1,11 @@
 # Reversi.js
 
+# V0.3 Validating moves, highlighting moves + server stuff
+
+![highlighting](https://raw.githubusercontent.com/ncleves/Reversi.js/master/Extras/highlighting_moves.png)
+
+A lot has been accomplished since the last version change. In the screenshot above there is a view of a set of new moveObjects that contain the position of a valid move as well as the positions to be flipped. This will speed up the game especially later on when more possible moves are available. This code is currently only on the testing branch.
+
 # V0.2? Some circles
 
 ##### I don't think this constitutes a minor version change, but hey, it's progress
