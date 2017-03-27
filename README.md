@@ -3,7 +3,7 @@
 # V0.2? Some circles
 
 ##### I don't think this constitutes a minor version change, but hey, it's progress
-![circles](https://raw.githubusercontent.com/ncleves/Reversi.js/master/extras/board_w_pieces.png)
+![circles](https://raw.githubusercontent.com/ncleves/Reversi.js/master/Extras/board_w_pieces.png)
 
 # V0.1 Getting somewhere...
 
