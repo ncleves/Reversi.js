@@ -29,4 +29,10 @@ function Position(row, col){
         }
     };
 
+    this.highlightPosition = function(row, col){
+        fill(25, 255, 35);
+        stroke(0);
+        rect((row + 1) * 50, (col + 1) * 50, 50, 50);
+    }
+
 }

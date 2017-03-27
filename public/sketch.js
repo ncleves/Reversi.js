@@ -93,9 +93,8 @@ function setup() {
     gameBoard.setBoardCoor(3, 4, 'O');
     gameBoard.setBoardCoor(4, 4, 'X');
 
-    console.log('remaining moves: ');
     remainingMoves();
-
+    console.log(remainingMoves());
 
     //UNCOMMENT FOR AN 'X'
     // gameBoard.setBoardCoor(1, 1, 'O');
@@ -177,6 +176,12 @@ function draw() {
         ellipse( 25, 25, 45, 45 );
     }
 
+    for(var i = 0; i < remainingMoves().length; i++){
+        var r = remainingMoves()[i].move.row;
+        var c = remainingMoves()[i].move.col;
+        position.highlightPosition(r, c);
+    }
+
 
 }
 
@@ -229,29 +234,30 @@ function makeMove(row, col) {
 
 
 function remainingMoves() {
-    //console.log("checking here");
 
-    //TODO: Identify why bug occurs when checking remaining available moves
+    var moveSet = function (move, positions) {
+        return{
+            "move": move,
+            "positions": positions
+        }
+    };
 
     var remainingMoves = [];
-    var remainingPositions = [];
+    var i = 0;
 
     for (var row = 0; row < ROWS; row++) {
         for (var col = 0; col < COLS; col++) {
-            if (checkMove(row, col).length > 0) {
-                var move = new Position(row, col);
-                // remainingMoves = remainingMoves.concat(move);
-                // remainingPositions = remainingPositions.concat(checkMove(row, col));
+            var flankedPositions = checkMove(row, col);
+            if (flankedPositions.length > 0) {
 
-                remainingMoves.push(move);
-                remainingPositions.push(checkMove(row,col));
+                var move = new Position(row, col);
+                remainingMoves[i] = moveSet(move, flankedPositions);
+                i++;
 
             }
         }
     }
 
-    console.log(remainingMoves);
-    console.log(remainingPositions);
     return remainingMoves;
 }
 
@@ -314,32 +320,32 @@ function checkMove(row, col) {
         }
 
         var startPos = new Position(row, col);
-        console.log("startPos: " + startPos.row + " " + startPos.col);
-        console.log("directions: " + directions);
-        console.log("current player: " + gameBoard.player);
+        // console.log("startPos: " + startPos.row + " " + startPos.col);
+        // console.log("directions: " + directions);
+        // console.log("current player: " + gameBoard.player);
 
         for (var currDir = 0; currDir < directions.length; currDir++) {
 
             var searchPos = moveDir(startPos, directions[currDir]);
             var tempPositions = [];
 
-            console.log("currdir: " + directions[currDir] + " searchPos: " + searchPos.row + " " + searchPos.col);
+            // console.log("currdir: " + directions[currDir] + " searchPos: " + searchPos.row + " " + searchPos.col);
 
             while (true) { // check within confines of the board
 
                 // searchPos.row >= 0 || searchPos.row <= 7 || searchPos.col >= 0 || searchPos.col <= 7
 
                 var searchPiece = gameBoard.boardArray[searchPos.row][searchPos.col];
-                console.log("searchPiece: " + searchPiece);
+                // console.log("searchPiece: " + searchPiece);
 
                 if (searchPiece == opponent()) {
 
                     tempPositions.push(searchPos);
-                    console.log("temp:");
-                    console.log(tempPositions);
+                    // console.log("temp:");
+                    // console.log(tempPositions);
                     searchPos = moveDir(searchPos, directions[currDir]);
                     // continue checking in this direction
-                    console.log("IN currdir: " + directions[currDir] + " searchPos: " + searchPos.row + " " + searchPos.col);
+                    // console.log("IN currdir: " + directions[currDir] + " searchPos: " + searchPos.row + " " + searchPos.col);
                     if(searchPos.row > 7 || searchPos.col > 7 || searchPos.row < 0 || searchPos.col < 0){
                         break; // if we reach the edge of the board, check next cardinal direction
                     }
@@ -357,7 +363,7 @@ function checkMove(row, col) {
                 }
             }
         }
-        console.log(allFlankedPositions);
+        // console.log(allFlankedPositions);
         return allFlankedPositions;
     }else{
         return allFlankedPositions;

@@ -17,7 +17,4 @@ function Piece(){
         }
     };
 
-    this.drawLegalMoves = function(){
-
-    }
 }
