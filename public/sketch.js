@@ -20,6 +20,8 @@ const SW = 6;
 const W = 7;
 const NW = 8;
 
+var madeMove = false;
+
 function moveDir(pos, dir) {
     var row = pos.row;
     var col = pos.col;
@@ -130,6 +132,8 @@ function mousePressed() {
 
     if(row != null && col != null) {
         makeMove(row, col);
+        madeMove = true;
+
     }
 
     console.log("checkMove arr: " + checkMove(row, col));
@@ -176,60 +180,66 @@ function draw() {
         ellipse( 25, 25, 45, 45 );
     }
 
-    for(var i = 0; i < remainingMoves().length; i++){
+
+    // TODO: Determine how to unhighlight moves after they are made
+    for(var i = 0; i < remainingMoves().length; i++) {
         var r = remainingMoves()[i].move.row;
         var c = remainingMoves()[i].move.col;
         position.highlightPosition(r, c);
-    }
+        // if move is made clear highlight all pos and highlight new pos
+        // if (madeMove){
+        //     position.unhighlightPosition(r, c);
+        //     madeMove = false;
+        // }
 
+    }
 
 }
 
 
 function makeMove(row, col) {
     var currPlayer = gameBoard.player;
-    var positionsToFlip;
-    var numToFlip;
 
-    var legalMove = false;
-    if(checkMove(row, col).length > 0){
-        legalMove = true;
-        positionsToFlip = checkMove(row, col);
-        numToFlip = positionsToFlip.length;
-    }
+    for(var i = 0; i < remainingMoves().length; i++){
+        var r = remainingMoves()[i].move.row;
+        var c = remainingMoves()[i].move.col;
 
-    if (gameBoard.boardArray[row][col] == '_' && legalMove) {
-        gameBoard.setBoardCoor(row, col, currPlayer);
+        if(r == row && c == col){
+            console.log('move is correctly chosen from highlighted moves');
+            var numToFlip = remainingMoves()[i].positions.length;
+            gameBoard.setBoardCoor(row, col, currPlayer);
 
-        // outer array of position arrays
-        for (var i = 0; i < positionsToFlip.length; i++) {
+            for(var k = 0; k < numToFlip; k++){
+                var flippedRow = remainingMoves()[i].positions[k].row;
+                var flippedCol = remainingMoves()[i].positions[k].col;
+                gameBoard.setBoardCoor(flippedRow, flippedCol, currPlayer);
 
-            var flipRow = positionsToFlip[i].row;
-            var flipCol = positionsToFlip[i].col;
-            gameBoard.setBoardCoor(flipRow, flipCol, currPlayer);
+                if (currPlayer == 'X') {
+                    gameBoard.scoreX = gameBoard.scoreX + numToFlip + 1;
+                    gameBoard.scoreO = gameBoard.scoreO - numToFlip;
+                } else {
+                    gameBoard.scoreO = gameBoard.scoreO + numToFlip + 1;
+                    gameBoard.scoreX = gameBoard.scoreX - numToFlip;
+                }
 
-            if (currPlayer == 'X') {
-                gameBoard.scoreX = gameBoard.scoreX + numToFlip + 1;
-                gameBoard.scoreO = gameBoard.scoreO - numToFlip;
-            } else {
-                gameBoard.scoreO = gameBoard.scoreO + numToFlip + 1;
-                gameBoard.scoreX = gameBoard.scoreX - numToFlip;
+            }
+
+            gameBoard.player = opponent();
+
+            if (remainingMoves().length == 0) {
+                // no moves found for player opponent
+                gameBoard.player = currPlayer;
+            }
+
+            if (remainingMoves().length == 0) {
+                // no moves found for anyone
+                gameBoard.noMovesRemain = true;
             }
 
         }
 
-        gameBoard.player = opponent();
-
-        if (!legalMovesRemain()) {
-            // no moves found for player opponent
-            gameBoard.player = currPlayer;
-        }
-
-        if (!legalMovesRemain()) {
-            // no moves found for anyone
-            gameBoard.noMovesRemain = true;
-        }
     }
+
 }
 
 

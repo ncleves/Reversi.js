@@ -32,7 +32,13 @@ function Position(row, col){
     this.highlightPosition = function(row, col){
         fill(25, 255, 35);
         stroke(0);
-        rect((row + 1) * 50, (col + 1) * 50, 50, 50);
-    }
+        rect((col + 1) * 50, (row + 1) * 50, 50, 50);
+    };
+
+    this.unhighlightPosition = function(row, col){
+        fill(0, 158, 11);
+        stroke(0);
+        rect((col + 1) * 50, (row + 1) * 50, 50, 50);
+    };
 
 }
