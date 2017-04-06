@@ -182,21 +182,10 @@ function draw() {
 
 
     // TODO: Determine how to unhighlight moves after they are made
-    for(var i = 0; i < remainingMoves().length; i++) {
-        var r = remainingMoves()[i].move.row;
-        var c = remainingMoves()[i].move.col;
-        position.highlightPosition(r, c);
-        // if move is made clear highlight all pos and highlight new pos
-        // if (madeMove){
-        //     position.unhighlightPosition(r, c);
-        //     madeMove = false;
-        // }
-
-    }
 
 }
 
-
+//TODO: FIX MAKE MOVE SELECTION OF MOVES
 function makeMove(row, col) {
     var currPlayer = gameBoard.player;
 
@@ -243,6 +232,7 @@ function makeMove(row, col) {
 }
 
 
+//TODO: COMBINE remainingMoves AND checkMove INTO ONE FUNCTION: getMoves
 function remainingMoves() {
 
     var moveSet = function (move, positions) {
@@ -330,32 +320,18 @@ function checkMove(row, col) {
         }
 
         var startPos = new Position(row, col);
-        // console.log("startPos: " + startPos.row + " " + startPos.col);
-        // console.log("directions: " + directions);
-        // console.log("current player: " + gameBoard.player);
-
         for (var currDir = 0; currDir < directions.length; currDir++) {
 
             var searchPos = moveDir(startPos, directions[currDir]);
             var tempPositions = [];
 
-            // console.log("currdir: " + directions[currDir] + " searchPos: " + searchPos.row + " " + searchPos.col);
-
-            while (true) { // check within confines of the board
-
-                // searchPos.row >= 0 || searchPos.row <= 7 || searchPos.col >= 0 || searchPos.col <= 7
-
+            while (true) { 
                 var searchPiece = gameBoard.boardArray[searchPos.row][searchPos.col];
-                // console.log("searchPiece: " + searchPiece);
-
+                
                 if (searchPiece == opponent()) {
 
                     tempPositions.push(searchPos);
-                    // console.log("temp:");
-                    // console.log(tempPositions);
                     searchPos = moveDir(searchPos, directions[currDir]);
-                    // continue checking in this direction
-                    // console.log("IN currdir: " + directions[currDir] + " searchPos: " + searchPos.row + " " + searchPos.col);
                     if(searchPos.row > 7 || searchPos.col > 7 || searchPos.row < 0 || searchPos.col < 0){
                         break; // if we reach the edge of the board, check next cardinal direction
                     }
@@ -367,13 +343,13 @@ function checkMove(row, col) {
 
                 } else if (searchPiece == gameBoard.player) {
 
-                    allFlankedPositions = allFlankedPositions.concat(tempPositions); // we have found one of our own pieces, tempPositions is valid
+                    allFlankedPositions = allFlankedPositions.concat(tempPositions); 
+                    // we have found one of our own pieces, tempPositions is valid
                     break; //continue checking cardinal directions
 
                 }
             }
         }
-        // console.log(allFlankedPositions);
         return allFlankedPositions;
     }else{
         return allFlankedPositions;
